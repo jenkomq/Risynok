@@ -1,0 +1,21 @@
+#include <stdio.h>
+#include <locale.h>
+
+
+void main() {
+
+	setlocale(LC_ALL, "Russian");
+	
+	float n = 3;
+	float l = 233;
+	int k = 2;
+	int m = 2;
+
+	printf("Дано:\n\t %3.f\n\t %4.d\n\t _______\nОтвет:\n \t %+06.02f", n, 233, (n / l));
+
+
+	getchar();
+	return 0;
+
+
+}
