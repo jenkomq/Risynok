@@ -1,0 +1,36 @@
+#include <stdio.h>
+#include <locale.h>
+#define D 2.54
+#define M 2.32
+#define K 2.7
+#pragma warning(disable : 4996)
+
+void main() {
+
+	setlocale(LC_ALL, "Rus");
+
+
+	int dym;
+	int result;
+	int dym1;
+	int result1;
+	int dym2;
+	int result2;
+
+
+	puts("Введите значение для расчета");
+
+	scanf("%d", &dym);
+	scanf("%d", &dym1);
+	scanf("%d", &dym2);
+
+	result = D * dym;
+	result1 = M * dym1;
+	result2 = K * dym2;
+
+	printf(" %d английских дюймов – это %d см ", dym, result);
+	printf("\n %d испанских дюймов - это %d см", dym1, result1);
+	printf("\n %d старолитовских дюймов - это %d см", dym2, result2);
+
+
+}
