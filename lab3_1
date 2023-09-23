@@ -24,6 +24,7 @@ void main() {
 	printf("\n Разность %d - %d = %d\n", num1,num2, num1 - num2);
 	printf("\n Произведение %d * %d = %d\n", num1, num2, num1 * num2);
 	printf("\n Частное %d / %d = %d\n", num1, num2, num1 / num2);
+	printf("\n Остаток %d % %d = %d\n", num1, num2, num1 % num2);
 
 
 
