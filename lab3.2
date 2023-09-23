@@ -34,3 +34,29 @@ void main() {
 
 
 }
+
+
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+#pragma warning(disable : 4996) 
+#include <locale.h>
+
+int main(int argc, char* argv[])
+{       
+    setlocale(LC_ALL, "Rus");
+    float Ml, Km, Mt;
+    printf("%s", "Введите число морских миль - ");
+    if (scanf("%f", &Ml) != 0)
+    {
+        puts("");
+        Mt = Ml * 1852; Km = Mt / 1000; Mt = Mt - (int)Km * 1000;
+        printf("Километров - %d, метров - %d\n", (int)Km, (int)Mt);
+    }
+    else puts("Пожалуйста, ведите число.\n");
+    getchar();
+    return(0);
+}
