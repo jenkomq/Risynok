@@ -1,0 +1,36 @@
+#include <stdio.h>
+#include <locale.h>
+#pragma warning(disable : 4996)
+
+
+void main() {
+
+	setlocale(LC_ALL, "Rus");
+
+
+	int num1, num2;
+
+
+
+
+
+	scanf("%d", &num1);
+	scanf("%d", &num2);
+
+	printf("Введено число %d", num1);
+	printf("\nВведено второе число %d", num2);
+
+	printf("\n Сумма %d + %d = %d\n", num1, num2, num1 + num2);
+	printf("\n Разность %d - %d = %d\n", num1,num2, num1 - num2);
+	printf("\n Произведение %d * %d = %d\n", num1, num2, num1 * num2);
+	printf("\n Частное %d / %d = %d\n", num1, num2, num1 / num2);
+
+
+
+
+
+
+
+	return 0;
+
+}
