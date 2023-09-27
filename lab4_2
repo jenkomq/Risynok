@@ -1,0 +1,26 @@
+#include <stdio.h>
+#include <locale.h>
+#pragma warning(disable : 4996)
+
+
+
+void main() {
+
+	setlocale(LC_ALL, "Rus");
+	int a = 11;
+	int b = 3;
+	int x = a / b;
+	float y;
+	double z;
+
+	printf("%d\n", (int)(a / b));
+	printf("%f\n", (float)(a / b));
+	printf("%g\n", (double)(a / b));
+
+
+	return 0;
+
+
+
+
+}
