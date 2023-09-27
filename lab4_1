@@ -1,0 +1,38 @@
+
+#include <stdio.h>
+#pragma warning(disable : 4996)
+#include <locale.h>
+
+void main()
+{
+	setlocale(LC_ALL, "RUS");
+
+	char c;
+	int i;
+	float f;
+	double d;
+	int a;
+
+	puts("Введите символ:");
+
+	scanf("%c", &c);
+
+	puts("Введите целое:");
+
+	scanf("%d", &i);
+
+	puts("Введите вещественное:");
+
+	scanf("%f", &f);
+
+	puts("Введите вещественное с двойной точностью :");
+
+	scanf("%lg", &d);
+
+	printf("Char - % c\nInt - %d\nFloat - %.2f\nDouble - %lg\n", c, i, f, d);
+	a = f;
+	printf("Целая часть - %d\nДробная часть - %f", a, f - a);
+
+
+	return 0;
+}
