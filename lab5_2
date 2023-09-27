@@ -1,0 +1,26 @@
+
+#define _CRT_SECURE_NO_DEPRECATE
+#include <stdio.h>
+#include <stdlib.h>
+#define _USE_MATH_DEFINES
+#include <math.h>
+#include <locale.h>
+#pragma warning(disable : 4996)
+
+
+void main()
+{
+	setlocale(LC_ALL, "RUS");
+
+	double k = -4;
+	double x;
+	puts("Введите X");
+
+	scanf("%lf", &x);
+
+	double a = log(fabs(-k * x));
+	double b = exp(x * 2) + a * x;
+	double y = (x *( a * a * a)) + (b * b);
+
+	printf("y = %.1lf", y);
+}
