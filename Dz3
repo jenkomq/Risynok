@@ -1,0 +1,34 @@
+#include <stdio.h>
+#include <locale.h>
+#define D 274.15 // кельвины
+#define M 34 // фаренгейт
+#pragma warning(disable : 4996)
+
+void main() {
+
+	setlocale(LC_ALL, "Rus");
+
+
+	int dym;
+	float result;
+	float result1;
+
+
+
+	puts("Введите значение для расчета");
+
+	scanf("%d", &dym);
+
+	result = D * dym;
+	result1 = M * dym;
+
+	printf(" %d кельвинов дюймов – это %1.f градусов ", dym, result);
+	printf("\n %d фаренгейтов - это %1.f градусов", dym, result1);
+
+
+	return 0;
+
+
+}
+
+
