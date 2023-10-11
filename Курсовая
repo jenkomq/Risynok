@@ -1,0 +1,63 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// функция для расчета необходимого количества плиток
+int calculateTiles(int roomLength, int roomWidth, int wallProtrusion) {
+    int totalTiles;
+
+    // вычисление площади пола без учета выступов стены
+    int floorArea = roomLength * roomWidth;
+
+    // вычисление площади пола с учетом выступов стены
+    int adjustedFloorArea = floorArea + 2 * (roomLength + roomWidth) * wallProtrusion;
+
+    // вычисление количества плиток
+    totalTiles = adjustedFloorArea / 1; // предполагается, что размер плитки 1 кв.м.
+
+    return totalTiles;
+}
+
+int main() {
+    // переменные для хранения размеров комнаты и выступов стены
+    int roomLength, roomWidth, wallProtrusion;
+    // переменная для выбора действия в меню
+    int choice;
+    // переменные для ввода новых данных
+    char continueInput;
+
+    do {
+        printf("1. Введите размеры комнаты\n");
+        printf("2. Введите выступы стены\n");
+        printf("3. Посчитать необходимое количество плиток\n");
+        printf("4. Выход\n");
+        printf("Выберите действие: ");
+
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Введите длину комнаты: ");
+                scanf("%d", &roomLength);
+                printf("Введите ширину комнаты: ");
+                scanf("%d", &roomWidth);
+                break;
+            case 2:
+                printf("Введите выступы стены: ");
+                scanf("%d", &wallProtrusion);
+                break;
+            case 3:
+                printf("Необходимое количество плиток: %d\n", calculateTiles(roomLength, roomWidth, wallProtrusion));
+                break;
+            case 4:
+                printf("Выход из программы.\n");
+                exit(0);
+            default:
+                printf("Неверный ввод. Попробуйте еще раз.\n");
+        }
+
+        printf("Продолжить? (y/n): ");
+        scanf(" %c", &continueInput);
+    } while (continueInput == 'y' || continueInput == 'Y');
+
+    return 0;
+}
