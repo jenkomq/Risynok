@@ -1,0 +1,36 @@
+#include <stdio.h>
+
+void drawTrapezoid(int height, int width, char symbol) {
+    int i, j, k;
+    
+    for (i = 1; i <= height; i++) {
+        for (j = height - i; j > 0; j--) {
+            printf(" ");
+        }
+        
+        for (k = 1; k <= width; k++) {
+            printf("%c", symbol);
+        }
+        
+        width += 2;
+        printf("\n");
+    }
+}
+
+int main() {
+    int height, width;
+    char symbol;
+    
+    printf("Введите высоту трапеции: ");
+    scanf("%d", &height);
+    
+    printf("Введите ширину трапеции: ");
+    scanf("%d", &width);
+    
+    printf("Введите символ, используемый для рисования: ");
+    scanf(" %c", &symbol);
+    
+    drawTrapezoid(height, width, symbol);
+    
+    return 0;
+}
