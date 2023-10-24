@@ -1,0 +1,61 @@
+#include <stdio.h>
+
+int sumOfHalfDigits(int number) {
+    int sum = 0;
+    int digitCount = 0;
+    int temp = number;
+
+    // Подсчет количества цифр в числе
+    while (temp != 0) {
+        temp /= 10;
+        digitCount++;
+    }
+
+    // Вычисление суммы первой половины цифр
+    temp = number;
+    for (int i = 0; i < digitCount / 2; i++) {
+        sum += temp % 10;
+        temp /= 10;
+    }
+
+    // Если количество цифр нечетное, пропустить среднюю цифру
+    if (digitCount % 2 != 0) {
+        temp /= 10;
+    }
+
+    // Вычисление суммы второй половины цифр
+    while (temp != 0) {
+        sum -= temp % 10;
+        temp /= 10;
+    }
+
+    return sum;
+}
+
+int main() {
+    while (1) {
+        int number;
+        char choice;
+
+        printf("Введите число: ");
+        scanf("%d", &number);
+
+        // Вычисление суммы половин цифр и проверка на равенство
+        int sum = sumOfHalfDigits(number);
+        if (sum == 0) {
+            printf("Сумма первой и второй половины цифр числа равна\n");
+        } else {
+            printf("Сумма первой и второй половины цифр числа не равна\n");
+        }
+
+        printf("Продолжить? (Да - y, нет - n)");
+        getchar(); // Чтение символа новой строки после ввода числа
+        choice = getchar();
+
+        if (choice == 'n') {
+            break;
+        }
+    }
+
+    return 0;
+}
