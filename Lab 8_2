@@ -1,0 +1,36 @@
+#include<stdio.h>
+#include<math.h>
+
+float calculateFunction(float x) {
+    return 5*pow(x,3) + 2*pow(x,2) - 15*x - 6;
+}
+
+int main() {
+    float start = 1.3;
+    float end = 3.4;
+    float step;
+    int num_points;
+    
+    printf("Вычисляемая функция: y = 5x^3 + 2x^2 - 15x - 6\n");
+    printf("Интервал: [%f; %f]\n", start, end);
+    
+    printf("Введите шаг табуляции: ");
+    scanf("%f", &step);
+    
+    num_points = (end - start) / step + 1;
+    
+    printf("\nТаблица значений:\n");
+    printf("-------------------\n");
+    printf("|     x     |     y|\n");
+    printf("-------------------\n");
+    
+    for(int i = 0; i < num_points; i++) {
+        float x = start + i*step;
+        float y = calculateFunction(x);
+        printf("| %.2f | %.2f   |\n", x, y);
+    }
+    
+    printf("-------------------\n");
+    
+    return 0;
+}
