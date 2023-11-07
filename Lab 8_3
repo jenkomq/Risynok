@@ -1,0 +1,22 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    int N;
+    float result = 0.0;
+
+    printf("Введите целое число N (N<10): ");
+    scanf("%d", &N);
+
+    for (int i = 1; i <= N; i++) {
+        if (i % 2 == 0) {
+            result -= i * 0.1;
+        } else {
+            result += i * 0.1;
+        }
+    }
+
+    printf("Значение выражения: %.2f\n", result);
+
+    return 0;
+}
