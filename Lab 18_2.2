@@ -1,0 +1,45 @@
+#include <stdio.h>
+#define _CRT_SECURE_NO_DEPRECATE
+#include <stdio.h>
+#include <stdlib.h>
+#define _USE_MATH_DEFINES
+#include <math.h>
+#include <locale.h>
+#pragma warning(disable : 4996)
+#include <time.h>
+
+
+
+int main() {
+    setlocale(LC_ALL, "Russian");
+    struct tm* mytime;
+    time_t t;
+
+    t = time(NULL);
+
+    mytime = localtime(&t);
+
+    printf("Текущее время: %02d:%02d:%02d\n", mytime->tm_hour, mytime->tm_min, mytime->tm_sec);
+
+    int year = mytime->tm_year + 1900; // Получаем год и увеличиваем на 1900, чтобы получить полный год.
+    int last_two_digits = year % 100; // Получаем последние две цифры года.
+
+    printf("Текущий год: %02d\n", last_two_digits);
+
+    int month = mytime->tm_mon + 1; // Получаем номер месяца и увеличиваем на 1, так как нумерация месяцев начинается с 0.
+
+    if (month >= 3 && month <= 5) { // Весна - март, апрель, май.
+        printf("Текущее время года: Весна\n");
+    }
+    else if (month >= 6 && month <= 8) { // Лето - июнь, июль, август.
+        printf("Current season: Лето\n");
+    }
+    else if (month >= 9 && month <= 11) { // Осень - сентябрь, октябрь, ноябрь.
+        printf("Текущее время года: Осень\n");
+    }
+    else { // Зима - декабрь, январь, февраль.
+        printf("Текущее время года: Зима\n");
+    }
+
+    return 0;
+}
