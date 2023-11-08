@@ -1,0 +1,24 @@
+#include <stdio.h>
+#include <time.h>
+#define _CRT_SECURE_NO_DEPRECATE
+#include <stdio.h>
+#include <stdlib.h>
+#define _USE_MATH_DEFINES
+#include <math.h>
+#include <locale.h>
+#pragma warning(disable : 4996)
+
+
+int main() {
+    setlocale(LC_ALL, "Russian");
+    struct tm* mytime;
+    time_t t;
+
+    t = time(NULL);
+
+    mytime = localtime(&t);
+
+    printf("Текущее время: %02d:%02d:%02d\n", mytime->tm_hour, mytime->tm_min, mytime->tm_sec);
+
+    return 0;
+}
