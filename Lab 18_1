@@ -55,8 +55,10 @@ void chetvert(Point a)
     }
 }
 
-void task1()
+void main()
 {
+    setlocale(LC_ALL, "Russian");
+
     Point b, a;
 
     a = (Point){ 1.f, 2.f, 'A' };
@@ -68,9 +70,4 @@ void task1()
     chetvert(seredina(a, b));
 }
 
-void main()
-{
-    setlocale(LC_ALL, "Russian");
 
-    task1();
-}
