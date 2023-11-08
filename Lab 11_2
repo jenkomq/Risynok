@@ -1,0 +1,40 @@
+int main(){
+setlocale(LC_ALL, "Russian");
+float A[100];
+float B[21];
+float plussum = 0;
+int pluscount = 0;
+float minsum = 0;
+int mincount = 0;
+
+float x = 2;
+
+for (int i = 0; i < 21; i++)
+{
+    B[i] = fabs(log(x)) - pow(x - 2, 2);
+    x += 0.1;
+}
+
+int j = 0;
+
+for (int i = 0; i < 100; i++)
+{
+    if (j == 21) j = 0;
+    A[i] = B[j];
+
+    if (A[i] > 0)
+    {
+        plussum += A[i];
+        pluscount++;
+    }
+    else
+    {
+        minsum += A[i];
+        mincount++;
+    }
+    j++;
+}
+
+printf("Имя массива - А; Сумма положительных - %lf; Сумма отрицательных - %lf; Число положительных - %d; Число отрицательных - %d; Среднее значние - %lf",
+    plussum, minsum, pluscount, mincount, (plussum + minsum) / 100);
+}
