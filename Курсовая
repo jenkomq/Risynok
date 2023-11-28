@@ -2,62 +2,75 @@
 #include <stdlib.h>
 
 // функция для расчета необходимого количества плиток
-int calculateTiles(int roomLength, int roomWidth, int wallProtrusion) {
-    int totalTiles;
+int calculatetiles(int roomlength, int roomwidth, int wallprotrusion, int tilesize) {
+   int totaltiles;
 
-    // вычисление площади пола без учета выступов стены
-    int floorArea = roomLength * roomWidth;
+   // вычисление площади пола без учета выступов стены
+   int floorarea = roomlength * roomwidth;
 
-    // вычисление площади пола с учетом выступов стены
-    int adjustedFloorArea = floorArea + 2 * (roomLength + roomWidth) * wallProtrusion;
+   // вычисление площади пола с учетом выступов стены
+   int adjustedfloorarea = floorarea + 2 * (roomlength + roomwidth) * wallprotrusion;
 
-    // вычисление количества плиток
-    totalTiles = adjustedFloorArea / 1; // предполагается, что размер плитки 1 кв.м.
+   // вычисление количества плиток
+   totaltiles = adjustedfloorarea / tilesize;
 
-    return totalTiles;
+   return totaltiles;
 }
 
 int main() {
-    // переменные для хранения размеров комнаты и выступов стены
-    int roomLength, roomWidth, wallProtrusion;
-    // переменная для выбора действия в меню
-    int choice;
-    // переменные для ввода новых данных
-    char continueInput;
+   // переменные для хранения размеров комнаты и выступов стены
+   int roomlength, roomwidth, wallprotrusion;
+   // переменная для выбора действия в меню
+   int choice;
+   // переменные для ввода новых данных
+   char continueinput;
+   // переменная для выбора типа плитки
+   int tiletype;
 
-    do {
-        printf("1. Введите размеры комнаты\n");
-        printf("2. Введите выступы стены\n");
-        printf("3. Посчитать необходимое количество плиток\n");
-        printf("4. Выход\n");
-        printf("Выберите действие: ");
+   do {
+      printf("1. введите размеры комнаты\n");
+      printf("2. введите выступы стены\n");
+      printf("3. выберите тип плитки\n");
+      printf("4. посчитать необходимое количество плиток\n");
+      printf("5. выход\n");
+      printf("выберите действие: ");
 
-        scanf("%d", &choice);
+      scanf("%d", &choice);
 
-        switch (choice) {
-            case 1:
-                printf("Введите длину комнаты: ");
-                scanf("%d", &roomLength);
-                printf("Введите ширину комнаты: ");
-                scanf("%d", &roomWidth);
-                break;
-            case 2:
-                printf("Введите выступы стены: ");
-                scanf("%d", &wallProtrusion);
-                break;
-            case 3:
-                printf("Необходимое количество плиток: %d\n", calculateTiles(roomLength, roomWidth, wallProtrusion));
-                break;
-            case 4:
-                printf("Выход из программы.\n");
-                exit(0);
-            default:
-                printf("Неверный ввод. Попробуйте еще раз.\n");
-        }
+      switch (choice) {
+         case 1:
+            printf("введите длину комнаты: ");
+            scanf("%d", &roomlength);
+            printf("введите ширину комнаты: ");
+            scanf("%d", &roomwidth);
+            break;
+         case 2:
+            printf("введите выступы стены: ");
+            scanf("%d", &wallprotrusion);
+            break;
+         case 3:
+            printf("выберите тип плитки (1 - размер 1 кв.м, 2 - размер 0.5 кв.м): ");
+            scanf("%d", &tiletype);
+            break;
+         case 4:
+            if (tiletype == 1) {
+               printf("необходимое количество плиток: %d\n", calculatetiles(roomlength, roomwidth, wallprotrusion, 1));
+            } else if (tiletype == 2) {
+               printf("необходимое количество плиток: %d\n", calculatetiles(roomlength, roomwidth, wallprotrusion, 0.5));
+            } else {
+               printf("неверный выбор типа плитки\n");
+            }
+            break;
+         case 5:
+            printf("выход из программы.\n");
+            exit(0);
+         default:
+            printf("неверный ввод. попробуйте еще раз.\n");
+      }
 
-        printf("Продолжить? (y/n): ");
-        scanf(" %c", &continueInput);
-    } while (continueInput == 'y' || continueInput == 'Y');
+      printf("продолжить? (y/n): ");
+      scanf(" %c", &continueinput);
+   } while (continueinput == 'y' || continueinput == 'Y');
 
-    return 0;
+   return 0;
 }
