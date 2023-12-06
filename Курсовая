@@ -10,27 +10,40 @@
 #pragma warning(disable : 4996)
 
 
+// функция для расчета необходимого количества плиток
+int calculatetiles(int roomlength, int roomwidth, int wallprotrusion) {
+    int totaltiles;
 
-// структура, представляющая информацию о плитке
+    // вычисление площади пола без учета выступов стены
+    int floorarea = roomlength * roomwidth;
+
+    // вычисление площади пола с учетом выступов стены
+    int adjustedfloorarea = floorarea + 2 * (roomlength + roomwidth) * wallprotrusion;
+
+    // вычисление количества плиток
+    totaltiles = adjustedfloorarea / 1; // предполагается, что размер плитки 1 кв.м.
+
+    return totaltiles;
+}
+
 typedef struct {
-    char type[20]; // тип плитки
-    double length; // длина плитки
-    double width;  // ширина плитки
-    double price;  // цена плитки
+    char type[20];
+    double length;
+    double width;
+    double price;
 } tile;
 
-// структура, представляющая информацию о помещении
 typedef struct {
-    char name[50];     // название помещения
-    double length;     // длина помещения
-    double width;      // ширина помещения
-    double wallprotrusion; // выступы стены
-    double area;       // площадь помещения
-    double volume;     // объем помещения
+    char name[50];
+    double length;
+    double width;
+    double wallprotrusion;
+    double area;
+    double volume;
 } room;
 
-// функция для чтения информации о строительных материалах из файла
 tile* readtilesfromfile(char* filename, int* numtiles) {
+
     FILE* file = fopen(filename, "r");
     if (file == NULL) {
         printf("не удалось открыть файл\n");
@@ -48,7 +61,6 @@ tile* readtilesfromfile(char* filename, int* numtiles) {
     return tiles;
 }
 
-// функция для записи информации о материалах, помещениях и конструкциях в файл
 void writedatatofile(char* filename, room* room, int numtiles, tile* tiles) {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
@@ -68,7 +80,6 @@ void writedatatofile(char* filename, room* room, int numtiles, tile* tiles) {
     fclose(file);
 }
 
-// функция для вывода изображения помещения
 void printroom(const room* room) {
     int totallength = (int)room->length;
     int totalwidth = (int)room->width;
@@ -89,6 +100,7 @@ void printroom(const room* room) {
     for (int i = 0; i < totallength + 2; i++) {
         printf("-");
     }
+
     printf("\n");
 }
 
@@ -104,7 +116,7 @@ int main() {
     scanf("%s", filename);
 
     // создание и открытие файла для записи
-    FILE* file = fopen(filename, "r");
+    FILE* file = fopen(filename, "w");
     if (file == NULL) {
         printf("не удалось открыть файл\n");
         return -1;
@@ -113,10 +125,16 @@ int main() {
 
     // чтение данных из файла
     tiles = readtilesfromfile(filename, &numtiles);
+    setlocale(LC_ALL, "rus");
+    // переменные для хранения размеров комнаты и выступов стены
+    int roomlength, roomwidth, wallprotrusion;
+    // переменная для выбора действия в меню
+    // переменные для ввода новых данных
+    char continueinput;
 
     while (1) {
-        printf("\n ********************главное меню********************");
-        printf("\n1) рассчитать количество плиток и стоимость\n");
+        printf("\n********************главное меню********************\n");
+        printf("1) рассчитать количество плиток\n");
         printf("2) вывести изображение помещения\n");
         printf("3) запись информации в файл\n");
         printf("4) изменить данные о помещении\n");
@@ -127,42 +145,16 @@ int main() {
         scanf("%d", &choice);
 
         switch (choice) {
-        case 1: // рассчитать количество плиток и стоимость
-            printf("введите длину помещения (в метрах): ");
-            scanf("%lf", &room.length);
-            printf("введите ширину помещения (в метрах): ");
-            scanf("%lf", &room.width);
-            printf("введите выступы стены (в метрах): ");
-            scanf("%lf", &room.wallprotrusion);
-
-            // вычисление площади пола
-            room.area = room.length * room.width;
-
-            // вычисление объема помещения
-            room.volume = room.area * room.wallprotrusion;
-
-            printf("площадь помещения: %.2lf м^2\n", room.area);
-            printf("объем помещения: %.2lf м^3\n", room.volume);
-
-            // вычисление площади и стоимости для каждой плитки
-            for (int i = 0; i < numtiles; i++) {
-                printf("введите цену за штуку плитки (в рублях): ");
-                scanf("%lf", &tiles[i].price);
-
-                double tilearea = tiles[i].length * tiles[i].width;
-                double numtotaltiles = room.area / tilearea + 0.5; // округляем результат к ближайшему целому
-                int roundednumtotaltiles = (int)round(numtotaltiles); // приводим результат к типу int
-                double totalprice = roundednumtotaltiles * tiles[i].price;
-
-                printf("для плитки %s:\n", tiles[i].type);
-                printf("необходимо %.0lf плиток\n", numtotaltiles);
-                printf("стоимость всего материала: %.2lf рублей\n", totalprice);
-            }
+        case 1:
+            printf("введите длину комнаты: ");
+            scanf("%d", &roomlength);
+            printf("введите ширину комнаты: ");
+            scanf("%d", &roomwidth);
+            printf("введите выступы стены: ");
+            scanf("%d", &wallprotrusion);
+            printf("необходимое количество плиток: %d\n", calculatetiles(roomlength, roomwidth, wallprotrusion));
             break;
-
         case 2: // вывести изображение помещения
-            printf("введите название помещения: ");
-            scanf("%s", room.name);
             printroom(&room);
             break;
 
@@ -172,35 +164,29 @@ int main() {
             break;
 
         case 4: // изменить данные о помещении
-            printf("введите длину помещения (в метрах): ");
+            printf("введите новое название помещения: ");
+            scanf("%s", room.name);
+            printf("введите новую длину помещения (в метрах): ");
             scanf("%lf", &room.length);
-            printf("введите ширину помещения (в метрах): ");
+            printf("введите новую ширину помещения (в метрах): ");
             scanf("%lf", &room.width);
-            printf("введите выступы стены (в метрах): ");
+            printf("введите новые выступы стены (в метрах): ");
             scanf("%lf", &room.wallprotrusion);
             break;
 
         case 5: // считать данные из файла
-            tiles = readtilesfromfile(filename, &numtiles);
+            // код для считывания данных из файла
             break;
 
-        case 6: // вывести информацию о размерах плитки
-            printf("Размеры плитки:\n");
-            for (int i = 0; i < numtiles; i++) {
-                printf("Тип плитки: %s\n", tiles[i].type);
-                printf("Длина плитки: %.2lf\n", tiles[i].length);
-                printf("Ширина плитки: %.2lf\n", tiles[i].width);
-                printf("Цена плитки: %.2lf\n", tiles[i].price);
-            }
+        case 6:
+            // код для вывода информации о размерах плитки
             break;
 
-        case 7: // выйти из программы
-            printf("программа завершена\n");
-            return 0;
-
-        default:
-            printf("некорректный выбор\n");
+        case 7:
+            // код для выхода из программы
             break;
         }
     }
+
+    return 0;
 }
