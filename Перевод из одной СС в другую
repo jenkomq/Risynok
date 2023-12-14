@@ -1,0 +1,93 @@
+def decimal_to_binary(decimal_num):
+    binary_num = bin(decimal_num)[2:]
+    return binary_num
+
+def decimal_to_hexadecimal(decimal_num):
+    hexadecimal_num = hex(decimal_num)[2:]
+    return hexadecimal_num
+
+def binary_to_decimal(binary_num):
+    decimal_num = int(binary_num, 2)
+    return decimal_num
+
+def binary_to_hexadecimal(binary_num):
+    decimal_num = binary_to_decimal(binary_num)
+    hexadecimal_num = decimal_to_hexadecimal(decimal_num)
+    return hexadecimal_num
+
+def hexadecimal_to_decimal(hexadecimal_num):
+    decimal_num = int(hexadecimal_num, 16)
+    return decimal_num
+
+def hexadecimal_to_binary(hexadecimal_num):
+    decimal_num = hexadecimal_to_decimal(hexadecimal_num)
+    binary_num = decimal_to_binary(decimal_num)
+    return binary_num
+
+def main():
+    print("выберите систему счисления:")
+    print("1. десятичная")
+    print("2. двоичная")
+    print("3. шестнадцатеричная")
+
+    choice = int(input("введите номер выбранной системы счисления: "))
+
+    if choice == 1:
+        decimal_num = int(input("введите десятичное число: "))
+
+        print("выберите систему счисления для перевода:")
+        print("1. в двоичную")
+        print("2. в шестнадцатеричную")
+
+        conversion_choice = int(input("введите номер выбранной системы счисления: "))
+
+        if conversion_choice == 1:
+            binary_num = decimal_to_binary(decimal_num)
+            print("результат: ", binary_num)
+        elif conversion_choice == 2:
+            hexadecimal_num = decimal_to_hexadecimal(decimal_num)
+            print("результат: ", hexadecimal_num)
+        else:
+            print("неверный выбор.")
+
+    elif choice == 2:
+        binary_num = input("введите двоичное число: ")
+
+        print("выберите систему счисления для перевода:")
+        print("1. в десятичную")
+        print("2. в шестнадцатеричную")
+
+        conversion_choice = int(input("введите номер выбранной системы счисления: "))
+
+        if conversion_choice == 1:
+            decimal_num = binary_to_decimal(binary_num)
+            print("результат: ", decimal_num)
+        elif conversion_choice == 2:
+            hexadecimal_num = binary_to_hexadecimal(binary_num)
+            print("результат: ", hexadecimal_num)
+        else:
+            print("неверный выбор.")
+
+    elif choice == 3:
+        hexadecimal_num = input("введите шестнадцатеричное число: ")
+
+        print("выберите систему счисления для перевода:")
+        print("1. в десятичную")
+        print("2. в двоичную")
+
+        conversion_choice = int(input("введите номер выбранной системы счисления: "))
+
+        if conversion_choice == 1:
+            decimal_num = hexadecimal_to_decimal(hexadecimal_num)
+            print("результат: ", decimal_num)
+        elif conversion_choice == 2:
+            binary_num = hexadecimal_to_binary(hexadecimal_num)
+            print("результат: ", binary_num)
+        else:
+            print("неверный выбор.")
+
+    else:
+        print("неверный выбор.")
+
+if __name__ == "__main__":
+    main()
