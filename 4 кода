@@ -1,0 +1,55 @@
+#Number 1
+
+num = '0.011'  # исходное число в двоичной системе счисления
+result = 0  # переменная для хранения результата
+
+# Расположение числа в виде десятичной дроби
+frac_part = num.split('.')[1]
+for i in range(len(frac_part)):
+    result += int(frac_part[i]) / 2**(i+1)
+
+# Перевод десятичной дроби в восьмеричную систему
+result_oct = ''
+while result > 0:
+    result *= 8
+    result_oct += str(int(result))
+    result %= 1
+
+result_oct = '0.' + result_oct
+print(result_oct)
+
+#Number 2
+
+num = 1584  # исходное число в десятичной системе счисления
+result = ''
+
+# Перевод числа в двоичную систему
+while num > 0:
+    result = str(num % 2) + result
+    num //= 2
+
+print(result)  
+
+#Number 3
+
+num = '7.523'  # исходное число в восьмеричной системе счисления
+result = 0  # переменная для хранения результата
+
+# Расположение числа в виде десятичной дроби
+frac_part = num.split('.')[1]
+for i in range(len(frac_part)):
+    result += int(frac_part[i]) / 8**(i+1)
+
+result += int(num.split('.')[0])  # сложение десятичной и дробной частей
+print(result)
+
+#Number 4
+
+num = '5bd.1'  # исходное число в шестнадцатеричной системе счисления
+result = ''
+
+# Перевод числа в двоичную систему
+num = num.replace('.', '')  # удаление запятой
+result = bin(int(num, 16))[2:]
+
+print(result)
