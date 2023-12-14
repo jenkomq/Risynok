@@ -1,0 +1,48 @@
+def convert_number(number, base):
+    """функция для перевода числа из десятичной системы счисления в выбранную систему"""
+    digits = "0123456789abcdef"
+    if number == 0:
+        return '0'
+    converted_number = ""
+    while number > 0:
+        converted_number = digits[int(number % base)] + converted_number
+        number //= base
+    return converted_number
+
+def multiplication(num1, num2, base):
+    """функция для умножения двух чисел в выбранной системе счисления"""
+    decimal_num1 = int(num1, base)
+    decimal_num2 = int(num2, base)
+    result = decimal_num1 * decimal_num2
+    return result
+
+def division(num1, num2, base):
+    """функция для деления двух чисел в выбранной системе счисления"""
+    decimal_num1 = int(num1, base)
+    decimal_num2 = int(num2, base)
+    result = decimal_num1 / decimal_num2
+    return result
+
+number1 = input("введите первое число: ")
+number2 = input("введите второе число: ")
+base = int(input("выберите систему счисления (2, 8, 16): "))
+
+converted_number1 = convert_number(float(number1.replace(",", ".")), base)
+converted_number2 = convert_number(float(number2.replace(",", ".")), base)
+
+print("первое число в выбранной системе счисления:", converted_number1)
+print("второе число в выбранной системе счисления:", converted_number2)
+
+operation = input("выберите операцию (* или /): ")
+
+if operation == '*':
+    result = multiplication(converted_number1, converted_number2, base)
+    print("результат умножения в выбранной системе счисления:", convert_number(result, base))
+elif operation == '/':
+    result = division(converted_number1, converted_number2, base)
+    print("результат деления в выбранной системе счисления:", convert_number(result, base))
+else:
+    print("некорректная операция!")
+
+
+
