@@ -1,0 +1,12 @@
+def calculator():
+    while True:
+        expression = input("Введите выражение (для завершения введите 'q'): ")
+        if expression == 'q':
+            break
+        try:
+            result = eval(expression)
+            print("Результат:", result)
+        except Exception as e:
+            print("Ошибка:", e)
+
+calculator()
