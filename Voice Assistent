@@ -1,0 +1,98 @@
+import pyttsx3
+import datetime
+import requests
+import json
+import subprocess
+import speech_recognition as sr
+import webbrowser
+
+def speak(text):
+    engine = pyttsx3.init()
+    engine.say(text)
+    engine.runAndWait()
+
+def get_time():
+    now = datetime.datetime.now()
+    current_time = now.strftime("%H:%M")
+    return current_time
+
+def get_weather(city):
+    api_key = "1616e6da3c97919f6651254c7d1f2804"
+    base_url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}"
+    response = requests.get(base_url)
+    data = response.json()
+
+    if "weather" in data:
+        main_info = data["weather"][0]["main"]
+        description = data["weather"][0]["description"]
+        temperature = data["main"]["temp"]
+        temperature = temperature - 273.15
+        return f"сейчас в {city} {description}. Температура около {round(temperature)} градусов Цельсия."
+    else:
+        return "невозможно получить информацию о погоде для данного города."
+
+def open_application(application_name):
+    try:
+        subprocess.call([application_name])
+        return f"приложение {application_name} успешно запущено."
+    except:
+        return f"не удалось запустить приложение {application_name}."
+
+while True:
+    speak("как могу помочь, сэр?")
+
+    recognizer = sr.Recognizer()
+    with sr.Microphone() as source:
+        print("говорите:")
+        audio = recognizer.listen(source)
+
+    try:
+        user_input = recognizer.recognize_google(audio, language="ru-RU")
+        print("вы сказали:", user_input)
+    except sr.UnknownValueError:
+        print("извините, не удалось распознать вашу речь.")
+        continue
+
+    if user_input.lower() == "стоп" or user_input.lower() == "пока":
+        speak("слушаюсь и повинуюсь")
+        break
+
+    if "время" in user_input:
+        current_time = get_time()
+        speak("хозяин-барин")
+        speak(f"сейчас {current_time}.")
+    elif "погода" in user_input:
+        speak("в каком городе вы хотели бы узнать погоду?")
+        with sr.Microphone() as source:
+            print("говорите:")
+            audio = recognizer.listen(source)
+
+        try:
+            city = recognizer.recognize_google(audio, language="ru-RU")
+            print("вы сказали:", city)
+            weather_info = get_weather(city)
+            speak(weather_info)
+        except sr.UnknownValueError:
+            print("извините, не удалось распознать вашу речь.")
+            continue
+    elif "Открой" in user_input:
+        if "видео" in user_input:
+            webbrowser.open("https://www.youtube.com")
+        elif "вк" in user_input:
+            webbrowser.open("https://vk.com")
+        elif "браузер" in user_input:
+            webbrowser.open("https://www.google.com")
+        else:
+            url = user_input.split("Открой")[-1].strip()
+            webbrowser.open_new(url)
+            application_name = url.split(".")[0]  # получаем название приложения или программы
+            open_application(application_name)
+
+def search(query):
+    url = f"https://www.google.com/search?q={query}"
+    response = requests.get(url)
+    if response.status_code == 200:
+        print("парсинг ответа...")
+        # ваш код для обработки результатов поиска
+    else:
+        print("не удалось выполнить поиск.")
