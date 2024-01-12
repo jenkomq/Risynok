@@ -1,0 +1,205 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_MATERIALS 10
+#define MAX_FORMS 10
+
+typedef struct {
+    char name[20];
+    float ratio;
+} Material;
+
+typedef struct {
+    char name[20];
+    int height;
+} Form;
+
+void writeToFile(Material materials[], int numMaterials, Form forms[], int numForms) {
+    FILE *file = fopen("data.txt", "w");
+    if (file == NULL) {
+        printf("Не удалось открыть файл для записи.\n");
+        return;
+    }
+
+    fprintf(file, "%d %d\n", numMaterials, numForms);
+
+    for (int i = 0; i < numMaterials; i++) {
+        fprintf(file, "%s %.2f\n", materials[i].name, materials[i].ratio);
+    }
+
+    for (int i = 0; i < numForms; i++) {
+        fprintf(file, "%s %d\n", forms[i].name, forms[i].height);
+    }
+
+    fclose(file);
+}
+
+void printForm(Form form) {
+    printf("Изображение помещения %s высотой %d:\n", form.name, form.height);
+}
+
+void printForms(Form forms[], int numForms) {
+    for (int i = 0; i < numForms; i++) {
+        printForm(forms[i]);
+    }
+}
+
+void printMaterials(Material materials[], int numMaterials) {
+    for (int i = 0; i < numMaterials; i++) {
+        printf("%d. %s - %.2f\n", i + 1, materials[i].name, materials[i].ratio);
+    }
+}
+
+void modifyForm(Form *form) {
+    printf("Введите новое название помещения: ");
+    scanf(" %19[^\n]", form->name);
+
+    printf("Введите новую высоту помещения: ");
+    scanf("%d", &(form->height));
+}
+
+void createForm(Form forms[], int *numForms) {
+    if (*numForms < MAX_FORMS) {
+        printf("Введите название нового помещения: ");
+        scanf(" %19[^\n]", forms[*numForms].name);
+
+        printf("Введите высоту нового помещения: ");
+        scanf("%d", &(forms[*numForms].height));
+
+        (*numForms)++;
+        printf("Новая форма помещения успешно создана.\n");
+    } else {
+        printf("Достигнуто максимальное количество форм помещений.\n");
+    }
+}
+
+void calculate(Material materials[], int numMaterials, Form form) {
+    float cement, sand, gravel;
+
+    printf("Введите количество цемента для бетонирования помещения: ");
+    scanf("%f", &cement);
+
+    printf("Введите количество песка для бетонирования помещения: ");
+    scanf("%f", &sand);
+
+    printf("Введите количество щебня для бетонирования помещения: ");
+    scanf("%f", &gravel);
+
+    for (int i = 0; i < numMaterials; i++) {
+        if (strcmp(materials[i].name, "цемент") == 0) {
+            float cementNeeded = cement / materials[i].ratio * form.height;
+            printf("Для бетонирования помещения требуется %.2f кг цемента\n", cementNeeded);
+        } else if (strcmp(materials[i].name, "песок") == 0) {
+            float sandNeeded = sand / materials[i].ratio * form.height;
+            printf("Для бетонирования помещения требуется %.2f кг песка\n", sandNeeded);
+        } else if (strcmp(materials[i].name, "щебень") == 0) {
+            float gravelNeeded = gravel / materials[i].ratio * form.height;
+            printf("Для бетонирования помещения требуется %.2f кг щебня\n", gravelNeeded);
+        }
+    }
+}
+
+int main() {
+    Material materials[MAX_MATERIALS] = {{"цемент", 1.0}, {"песок", 2.0}, {"щебень", 3.0}};
+    int numMaterials = 3;
+
+    Form forms[MAX_FORMS];
+    int numForms = 0;
+
+    char choice;
+    do {
+        printf("\nМеню:\n");
+        printf("1. Записать информацию в файл\n");
+        printf("2. Вывести изображение помещения\n");
+        printf("3. Показать все формы помещений\n");
+        printf("4. Показать все материалы\n");
+        printf("5. Изменить информацию о помещении\n");
+        printf("6. Рассчитать количество материалов для бетонирования\n");
+        printf("7. Создать новую форму помещения\n");
+        printf("8. Расширенное меню\n");
+        printf("9. Завершить программу\n");
+
+        printf("Введите выбор: ");
+        scanf(" %c", &choice);
+
+        switch (choice) {
+            case '1':
+                writeToFile(materials, numMaterials, forms, numForms);
+                printf("Информация успешно записана в файл.\n");
+                break;
+            case '2':
+                if (numForms > 0) {
+                    printf("Выберите номер помещения для вывода изображения: ");
+                    int formIndex;
+                    scanf("%d", &formIndex);
+
+                    if (formIndex >= 1 && formIndex <= numForms) {
+                        printForm(forms[formIndex - 1]);
+                    } else {
+                        printf("Неправильный номер помещения.\n");
+                    }
+                } else {
+                    printf("Не определены формы помещений.\n");
+                }
+                break;
+            case '3':
+                if (numForms > 0) {
+                    printForms(forms, numForms);
+                } else {
+                    printf("Не определены формы помещений.\n");
+                }
+                break;
+            case '4':
+                if (numMaterials > 0) {
+                    printMaterials(materials, numMaterials);
+                } else {
+                    printf("Не определены материалы.\n");
+                }
+                break;
+            case '5':
+                if (numForms > 0) {
+                    printf("Выберите номер помещения, которое хотите изменить: ");
+                    int formIndex;                   scanf("%d", &formIndex);
+
+                    if (formIndex >= 1 && formIndex <= numForms) {
+                        modifyForm(&forms[formIndex - 1]);
+                        printf("Информация о помещении успешно изменена.\n");
+                    } else {
+                        printf("Неправильный номер помещения.\n");
+                    }
+                } else {
+                    printf("Не определены формы помещений.\n");
+                }
+                break;
+            case '6':
+                if (numForms > 0) {
+                    printf("Выберите номер помещения для расчета материалов: ");
+                    int formIndex;
+                    scanf("%d", &formIndex);
+
+                    if (formIndex >= 1 && formIndex <= numForms) {
+                        calculate(materials, numMaterials, forms[formIndex - 1]);
+                    } else {
+                        printf("Неправильный номер помещения.\n");
+                    }
+                } else {
+                    printf("Не определены формы помещений.\n");
+                }
+                break;
+            case '7':
+                createForm(forms, &numForms);
+                break;
+            case '8':
+                // Добавить код для расширенного меню при необходимости
+                break;
+            case '9':
+                printf("Программа завершена.\n");
+                break;
+            default:
+                printf("Неверный выбор. Пожалуйста, выберите существующий пункт меню.\n");
+        }
+    } while (choice != '9');
+
+    return 0;
+}
