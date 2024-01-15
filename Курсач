@@ -13,6 +13,8 @@ typedef struct {
 typedef struct {
     char name[20];
     int height;
+    int length;
+    int width;
 } Form;
 
 void writeToFile(Material materials[], int numMaterials, Form forms[], int numForms) {
@@ -29,20 +31,14 @@ void writeToFile(Material materials[], int numMaterials, Form forms[], int numFo
     }
 
     for (int i = 0; i < numForms; i++) {
-        fprintf(file, "%s %d\n", forms[i].name, forms[i].height);
+        fprintf(file, "%s %d %d %d\n", forms[i].name, forms[i].height, forms[i].length, forms[i].width);
     }
 
     fclose(file);
 }
 
 void printForm(Form form) {
-    printf("Изображение помещения %s высотой %d:\n", form.name, form.height);
-}
-
-void printForms(Form forms[], int numForms) {
-    for (int i = 0; i < numForms; i++) {
-        printForm(forms[i]);
-    }
+    printf("Изображение помещения %s высотой %d, длиной %d и шириной %d:\n", form.name, form.height, form.length, form.width);
 }
 
 void printMaterials(Material materials[], int numMaterials) {
@@ -57,9 +53,15 @@ void modifyForm(Form *form) {
 
     printf("Введите новую высоту помещения: ");
     scanf("%d", &(form->height));
+
+    printf("Введите новую длину помещения: ");
+    scanf("%d", &(form->length));
+
+    printf("Введите новую ширину помещения: ");
+    scanf("%d", &(form->width));
 }
 
-void createForm(Form forms[], int *numForms) {
+int createForm(Form forms[], int *numForms) {
     if (*numForms < MAX_FORMS) {
         printf("Введите название нового помещения: ");
         scanf(" %19[^\n]", forms[*numForms].name);
@@ -67,14 +69,22 @@ void createForm(Form forms[], int *numForms) {
         printf("Введите высоту нового помещения: ");
         scanf("%d", &(forms[*numForms].height));
 
+        printf("Введите длину нового помещения: ");
+        scanf("%d", &(forms[*numForms].length));
+
+        printf("Введите ширину нового помещения: ");
+        scanf("%d", &(forms[*numForms].width));
+
         (*numForms)++;
         printf("Новая форма помещения успешно создана.\n");
+        return 1;
     } else {
         printf("Достигнуто максимальное количество форм помещений.\n");
+        return 0;
     }
 }
 
-void calculate(Material materials[], int numMaterials, Form form) {
+int calculate(Material materials[], int numMaterials, Form form) {
     float cement, sand, gravel;
 
     printf("Введите количество цемента для бетонирования помещения: ");
@@ -98,6 +108,7 @@ void calculate(Material materials[], int numMaterials, Form form) {
             printf("Для бетонирования помещения требуется %.2f кг щебня\n", gravelNeeded);
         }
     }
+    return 1;
 }
 
 int main() {
@@ -117,8 +128,7 @@ int main() {
         printf("5. Изменить информацию о помещении\n");
         printf("6. Рассчитать количество материалов для бетонирования\n");
         printf("7. Создать новую форму помещения\n");
-        printf("8. Расширенное меню\n");
-        printf("9. Завершить программу\n");
+        printf("8. Завершить программу\n");
 
         printf("Введите выбор: ");
         scanf(" %c", &choice);
@@ -145,13 +155,15 @@ int main() {
                 break;
             case '3':
                 if (numForms > 0) {
-                    printForms(forms, numForms);
+                    for (int i = 0; i < numForms; i++) {
+                        printForm(forms[i]);
+                    }
                 } else {
                     printf("Не определены формы помещений.\n");
                 }
                 break;
             case '4':
-                if (numMaterials > 0) {
+                if (numMaterials >0) {
                     printMaterials(materials, numMaterials);
                 } else {
                     printf("Не определены материалы.\n");
@@ -159,8 +171,9 @@ int main() {
                 break;
             case '5':
                 if (numForms > 0) {
-                    printf("Выберите номер помещения, которое хотите изменить: ");
-                    int formIndex;                   scanf("%d", &formIndex);
+                    printf("Выберите номер помещения для изменения информации: ");
+                    int formIndex;
+                    scanf("%d", &formIndex);
 
                     if (formIndex >= 1 && formIndex <= numForms) {
                         modifyForm(&forms[formIndex - 1]);
@@ -188,18 +201,19 @@ int main() {
                 }
                 break;
             case '7':
-                createForm(forms, &numForms);
+                if (createForm(forms, &numForms)) {
+                    printf("Новая форма помещения успешно создана.\n");
+                } else {
+                    printf("Не удалось создать новую форму помещения.\n");
+                }
                 break;
             case '8':
-                // Добавить код для расширенного меню при необходимости
-                break;
-            case '9':
                 printf("Программа завершена.\n");
                 break;
             default:
-                printf("Неверный выбор. Пожалуйста, выберите существующий пункт меню.\n");
+                printf("Неправильный выбор. Пожалуйста, выберите снова.\n");
         }
-    } while (choice != '9');
+    } while (choice != '8');
 
     return 0;
 }
