@@ -1,192 +1,159 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define _crt_secure_no_deprecate
-#include <stdio.h>
-#include <stdlib.h>
-#define _use_math_defines
-#include <math.h>
-#include <locale.h>
-#pragma warning(disable : 4996)
 
-
-// функция для расчета необходимого количества плиток
-int calculatetiles(int roomlength, int roomwidth, int wallprotrusion) {
-    int totaltiles;
-
-    // вычисление площади пола без учета выступов стены
-    int floorarea = roomlength * roomwidth;
-
-    // вычисление площади пола с учетом выступов стены
-    int adjustedfloorarea = floorarea + 2 * (roomlength + roomwidth) * wallprotrusion;
-
-    // вычисление количества плиток
-    totaltiles = adjustedfloorarea / 1; // предполагается, что размер плитки 1 кв.м.
-
-    return totaltiles;
-}
+#define MAX_MATERIALS 10
+#define MAX_FORMS 10
 
 typedef struct {
-    char type[20];
-    double length;
-    double width;
-    double price;
-} tile;
+    char name[20];
+    float ratio;
+} Material;
 
 typedef struct {
-    char name[50];
-    double length;
-    double width;
-    double wallprotrusion;
-    double area;
-    double volume;
-} room;
+    char name[20];
+    int height;
+    int length;
+    int width;
+} Form;
 
-tile* readtilesfromfile(char* filename, int* numtiles) {
-
-    FILE* file = fopen(filename, "r");
+// Функция записи информации о материалах и формах в файл
+void writeToFile(Material materials[], int numMaterials, Form forms[], int numForms) {
+    FILE *file = fopen("data.txt", "w");
     if (file == NULL) {
-        printf("не удалось открыть файл\n");
-        return NULL;
-    }
-
-    fscanf(file, "%d", numtiles);
-    tile* tiles = (tile*)malloc((*numtiles) * sizeof(tile));
-
-    for (int i = 0; i < *numtiles; i++) {
-        fscanf(file, "%s %lf %lf %lf", tiles[i].type, &tiles[i].length, &tiles[i].width, &tiles[i].price);
-    }
-
-    fclose(file);
-    return tiles;
-}
-
-void writedatatofile(char* filename, room* room, int numtiles, tile* tiles) {
-    FILE* file = fopen(filename, "w");
-    if (file == NULL) {
-        printf("не удалось открыть файл\n");
+        printf("Ошибка: Не удалось открыть файл для записи.\n");
         return;
     }
 
-    // запись информации о помещении
-    fprintf(file, "%s %.2lf %.2lf %.2lf\n", room->name, room->length, room->width, room->wallprotrusion);
+    fprintf(file, "%d %d\n", numMaterials, numForms);
 
-    // запись информации о плитках
-    fprintf(file, "%d\n", numtiles);
-    for (int i = 0; i < numtiles; i++) {
-        fprintf(file, "%s %.2lf %.2lf %.2lf\n", tiles[i].type, tiles[i].length, tiles[i].width, tiles[i].price);
+    for (int i = 0; i < numMaterials; i++) {
+        fprintf(file, "%s %.2f\n", materials[i].name, materials[i].ratio);
+    }
+
+    for (int i = 0; i < numForms; i++) {
+        fprintf(file, "%s %d %d %d\n", forms[i].name, forms[i].height, forms[i].length, forms[i].width);
     }
 
     fclose(file);
+    printf("Информация успешно записана в файл.\n");
 }
 
-void printroom(const room* room) {
-    int totallength = (int)room->length;
-    int totalwidth = (int)room->width;
+// Функция вывода информации о помещении
+void printForm(Form form) {
+    printf("Изображение помещения %s высотой %d, длиной %d и шириной %d:\n", form.name, form.height, form.length, form.width);
+}
 
-    for (int i = 0; i < totallength + 2; i++) {
-        printf("-");
+// Функция вывода информации о материалах
+void printMaterials(Material materials[], int numMaterials) {
+    for (int i = 0; i < numMaterials; i++) {
+        printf("%d. %s - %.2f\n", i + 1, materials[i].name, materials[i].ratio);
     }
-    printf("\n");
+}
 
-    for (int i = 0; i < totalwidth; i++) {
-        printf("|");
-        for (int j = 0; j < totallength; j++) {
-            printf(" ");
+// Функция изменения информации о помещении
+void modifyForm(Form *form) {
+    printf("Введите новое название помещения: ");
+    scanf(" %19[^\n]", form->name);
+
+    printf("Введите новую высоту помещения: ");
+    scanf("%d", &(form->height));
+
+    printf("Введите новую длину помещения: ");
+    scanf("%d", &(form->length));
+
+    printf("Введите новую ширину помещения: ");
+    scanf("%d", &(form->width));
+}
+
+// Функция создания новой формы помещения
+int createForm(Form forms[], int *numForms) {
+    if (*numForms < MAX_FORMS) {
+        printf("Введите название нового помещения: ");
+        scanf(" %19[^\n]", forms[*numForms].name);
+
+        printf("Введите высоту нового помещения: ");
+        scanf("%d", &(forms[*numForms].height));
+
+        printf("Введите длину нового помещения: ");
+        scanf("%d", &(forms[*numForms].length));
+
+        printf("Введите ширину нового помещения: ");
+        scanf("%d", &(forms[*numForms].width));
+
+        (*numForms)++;
+        printf("Новая форма помещения успешно создана.\n");
+        return 1;
+    } else {
+        printf("Ошибка: Достигнуто максимальное количество форм помещений.\n");
+        return 0;
+    }
+}
+
+// Функция расчета количества материалов для бетонирования
+int calculate(Material materials[], int numMaterials, Form form) {
+    float cement, sand, gravel;
+
+    printf("Введите количество цемента для бетонирования помещения: ");
+    scanf("%f", &cement);
+
+    printf("Введите количество песка для бетонирования помещения: ");
+    scanf("%f", &sand);
+
+    printf("Введите количество щебня для бетонирования помещения: ");
+    scanf("%f", &gravel);
+
+    for (int i = 0; i < numMaterials; i++) {
+        if (strcmp(materials[i].name, "цемент") == 0) {
+            float cementNeeded = cement / materials[i].ratio * form.height;
+            printf("Для бетонирования помещения требуется %.2f кг цемента\n", cementNeeded);
+        } else if (strcmp(materials[i].name, "песок") == 0) {
+            float sandNeeded = sand / materials[i].ratio * form.height;
+            printf("Для бетонирования помещения требуется %.2f кг песка\n", sandNeeded);
+        } else if (strcmp(materials[i].name, "щебень") == 0) {
+            float gravelNeeded = gravel / materials[i].ratio * form.height;
+            printf("Для бетонирования помещения требуется %.2f кг щебня\n", gravelNeeded);
         }
-        printf("|\n");
     }
-
-    for (int i = 0; i < totallength + 2; i++) {
-        printf("-");
-    }
-
-    printf("\n");
+    return 1;
 }
 
 int main() {
-    setlocale(LC_ALL, "rus");
-    char filename[100];
-    int choice;
-    room room;
-    tile* tiles = NULL;
-    int numtiles = 0;
+    Material materials[MAX_MATERIALS] = {{"цемент", 1.0}, {"песок", 2.0}, {"щебень", 3.0}};
+    int numMaterials = 3;
 
-    printf("введите название файла: ");
-    scanf("%s", filename);
+    Form forms[MAX_FORMS];
+    int numForms = 0;
 
-    // создание и открытие файла для записи
-    FILE* file = fopen(filename, "w");
-    if (file == NULL) {
-        printf("не удалось открыть файл\n");
-        return -1;
-    }
-    fclose(file);
+    char choice;
+    do {
+        printf("\nМеню:\n");
+        printf("1. Записать информацию в файл\n");
+        printf("2. Вывести изображение помещения\n");
+        printf("3. Показать все формы помещений\n");
+        printf("4. Показать все материалы\n");
+        printf("5. Изменить информацию о помещении\n");
+        printf("6. Рассчитать количество материалов для бетонирования\n");
+        printf("7. Создать новую форму помещения\n");
+        printf("8. Завершить программу\n");
 
-    // чтение данных из файла
-    tiles = readtilesfromfile(filename, &numtiles);
-    setlocale(LC_ALL, "rus");
-    // переменные для хранения размеров комнаты и выступов стены
-    int roomlength, roomwidth, wallprotrusion;
-    // переменная для выбора действия в меню
-    // переменные для ввода новых данных
-    char continueinput;
-
-    while (1) {
-        printf("\n********************главное меню********************\n");
-        printf("1) рассчитать количество плиток\n");
-        printf("2) вывести изображение помещения\n");
-        printf("3) запись информации в файл\n");
-        printf("4) изменить данные о помещении\n");
-        printf("5) считать данные из файла\n");
-        printf("6) вывести информацию о размерах плитки\n");
-        printf("7) выйти из программы\n");
-        printf("введите выбор (1-7): ");
-        scanf("%d", &choice);
+        printf("Введите выбор: ");
+        scanf(" %c", &choice);
 
         switch (choice) {
-        case 1:
-            printf("введите длину комнаты: ");
-            scanf("%d", &roomlength);
-            printf("введите ширину комнаты: ");
-            scanf("%d", &roomwidth);
-            printf("введите выступы стены: ");
-            scanf("%d", &wallprotrusion);
-            printf("необходимое количество плиток: %d\n", calculatetiles(roomlength, roomwidth, wallprotrusion));
-            break;
-        case 2: // вывести изображение помещения
-            printroom(&room);
-            break;
+            case '1':
+                writeToFile(materials, numMaterials, forms, numForms);
+                break;
+            case '2':
+                if (numForms > 0) {
+                    printf("Выберите номер помещения для вывода изображения: ");
+                    int formIndex;
+                    scanf("%d", &formIndex);
 
-        case 3: // запись информации в файл
-            writedatatofile(filename, &room, numtiles, tiles);
-            printf("данные успешно записаны в файл\n");
-            break;
-
-        case 4: // изменить данные о помещении
-            printf("введите новое название помещения: ");
-            scanf("%s", room.name);
-            printf("введите новую длину помещения (в метрах): ");
-            scanf("%lf", &room.length);
-            printf("введите новую ширину помещения (в метрах): ");
-            scanf("%lf", &room.width);
-            printf("введите новые выступы стены (в метрах): ");
-            scanf("%lf", &room.wallprotrusion);
-            break;
-
-        case 5: // считать данные из файла
-            // код для считывания данных из файла
-            break;
-
-        case 6:
-            // код для вывода информации о размерах плитки
-            break;
-
-        case 7:
-            // код для выхода из программы
-            break;
-        }
-    }
-
-    return 0;
-}
+                    if (formIndex >= 1 && formIndex <= numForms) {
+                        printForm(forms[formIndex - 1]);
+                    } else {
+                        printf("Ошибка: Неправильный номер помещения.\n");
+                    }
+                } else {
+                    printf("Ошибка: Не определены формы помещений.\n");
