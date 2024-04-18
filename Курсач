@@ -25,14 +25,21 @@ void writeToFile(Material materials[], int numMaterials, Form forms[], int numFo
         return;
     }
 
-    fprintf(file, "%d %d\n", numMaterials, numForms);
+    fprintf(file, "Данные о помещении:\n");
+    fprintf(file, "%d\n", numForms);
+
+    for (int i = 0; i < numForms; i++) {
+        fprintf(file, "Помещение %s:\n", forms[i].name);
+        fprintf(file, "Высота: %d\n", forms[i].height);
+        fprintf(file, "Длина: %d\n", forms[i].length);
+        fprintf(file, "Ширина: %d\n", forms[i].width);
+    }
+
+    fprintf(file, "Материалы:\n");
+    fprintf(file, "%d\n", numMaterials);
 
     for (int i = 0; i < numMaterials; i++) {
         fprintf(file, "%s %.2f\n", materials[i].name, materials[i].ratio);
-    }
-
-    for (int i = 0; i < numForms; i++) {
-        fprintf(file, "%s %d %d %d\n", forms[i].name, forms[i].height, forms[i].length, forms[i].width);
     }
 
     fclose(file);
@@ -40,6 +47,18 @@ void writeToFile(Material materials[], int numMaterials, Form forms[], int numFo
 
 void printForm(Form form) {
     printf("Изображение помещения %s высотой %d, длиной %d и шириной %d:\n", form.name, form.height, form.length, form.width);
+
+    for (int i = 0; i < form.height; i++) {
+        for (int j = 0; j < form.width; j++) {
+            if (i == 0 || i == form.height - 1 || j == 0 || j == form.width - 1) {
+                printf("*"); // Грани помещения обозначаются звездочкой
+            }
+            else {
+                printf(" "); // Внутреннее пространство помещения обозначается пробелом
+            }
+        }
+        printf("\n");
+    }
 }
 
 void printMaterials(Material materials[], int numMaterials) {
@@ -125,7 +144,12 @@ int main() {
 
     char choice;
     do {
-        printf("\nМеню:\n");
+        printf("\n************************************************************************************************************************\n");
+        printf("\n                                                     Приветствую, уважаемый пользователь.\n                                  ");
+        printf("\n                         Это программа создана студентом 1-ого курса ВГТУ Колаевым Д.В для курсового проекта на тему:        \n");
+        printf("\n                              Разработка калькулятора расчета материалов бетонирования площадки                               \n");
+        printf("\n************************************************************************************************************************\n");
+        printf("\n*********************************************************Главное меню***************************************************\n");
         printf("1. Записать информацию в файл\n");
         printf("2. Вывести изображение помещения\n");
         printf("3. Показать все формы помещений\n");
@@ -145,6 +169,10 @@ int main() {
             break;
         case '2':
             if (numForms > 0) {
+                printf("Доступные помещения для вывода изображения:\n");
+                for (int i = 0; i < numForms; i++) {
+                    printf("%d. %s\n", i + 1, forms[i].name);
+                }
                 printf("Выберите номер помещения для вывода изображения: ");
                 int formIndex;
                 scanf("%d", &formIndex);
