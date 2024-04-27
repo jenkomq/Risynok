@@ -97,4 +97,76 @@ int main() {
     free(arr);
 
     return 0;
+}#include <stdio.h>
+#include <locale.h>
+#include <time.h>
+#include <math.h>
+
+void fillarr(float* arr);
+void printarr(float* arr);
+float pozitiv(float* arr);
+float proizv(float* arr);
+
+int main() {
+  setlocale(LC_ALL, "Rus");
+  srand(time(NULL));
+  float a[20];
+  fillarr(a);
+  printarr(a);
+  float a1 = pozitiv(a);
+  printf("\n сумма 2 элементов массива равна %f ", a1);
+  float b = proizv(a);
+  printf("\n Произведение %f ", b);
+  return 0;
+}
+void fillarr(float* arr) {
+  for (int i = 0; i < 20; i++) {
+    arr[i] = rand() % 51 - 15;
+  }
+}
+
+void printarr(float* arr) {
+  for (int i = 0; i < 20; i++) {
+    printf("%.2f ", arr[i]);
+  }  
+}
+float pozitiv(float* arr)
+{
+  float summ = 0;
+  for (int i = 0; i < 20; i++) {
+    if (arr[i] > 0)
+    {
+      summ += arr[i];
+    }
+  }
+  return summ;
+}
+
+float proizv(float* arr)
+{
+  float max = -99, min = 99, prod = 1;
+  int mx, mn;
+  for (int i = 0; i < 20; i++) {
+    if (arr[i] > max) {
+      max = arr[i];
+      mx = i;
+    }
+  }
+  for (int i = 0; i < 20; i++) {
+    if (arr[i] < min) {
+      min = arr[i];
+      mn = i;
+    }
+  }
+  if (mn > mx) {
+    for (int i = mx; i <= mn; i++) {
+      prod *= arr[i];
+    }
+  }
+  else {
+    for (int i = mn; i <= mx; i++) {
+      prod *= arr[i];
+    }
+  }
+  return prod;
 }
