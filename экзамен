@@ -5,18 +5,18 @@
 #include <stdlib.h>
 
 // вычислить сумму положительных эл-тов
-float* sum_positive(float* arr, int n) {
+float sum_positive(float* arr, int n) {
     float sum = 0;
     for (int i = 0; i < n; i++) {
         if (arr[i] > 0) {
             sum += arr[i];
         }
     }
-    return 0;
+    return sum;
 }
 
 // вычислить произведение эл-тов между максимальным и минимальным по модулю
-float* product_between_max_min(float* arr, int n) {
+float product_between_max_min(float* arr, int n) {
     int max_index = 0;
     int min_index = 0;
     for (int i = 1; i < n; i++) {
@@ -36,7 +36,7 @@ float* product_between_max_min(float* arr, int n) {
         product *= arr[i];
     }
 
-    return &product;
+    return product;
 }
 
 // сортировка пузырьком
@@ -83,11 +83,11 @@ int main() {
         scanf("%f", &arr[i]);
     }
 
-    float* sum_pos = sum_positive(arr, n);
-    printf("сумма положительных элементов: %.2f\n", *sum_pos);
+    float sum_pos = sum_positive(arr, n);
+    printf("сумма положительных элементов: %.2f\n", sum_pos);
 
-    float* product = product_between_max_min(arr, n);
-    printf("произведение элементов между максимальным и минимальным по модулю: %.2f\n", *product);
+    float product = product_between_max_min(arr, n);
+    printf("произведение элементов между максимальным и минимальным по модулю: %.2f\n", product);
 
     bubble_sort(arr, n);
 
