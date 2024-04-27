@@ -1,0 +1,90 @@
+#pragma warning(disable : 4996)
+#include <locale.h>
+#include <stdio.h>
+#include <math.h>
+
+// Вычислить сумму положительных эл-тов
+float sum_positive(float arr[], int n) {
+    float sum = 0;
+    for (int i = 0; i < n; i++) {
+        if (arr[i] > 0) {
+            sum += arr[i];
+        }
+    }
+    return sum;
+}
+
+// Вычислить произведение эл-тов между максимальным и минимальным по модулю
+float product_between_max_min(float arr[], int n) {
+    int max_index = 0;
+    int min_index = 0;
+    for (int i = 1; i < n; i++) {
+        if (fabs(arr[i]) > fabs(arr[max_index])) {
+            max_index = i;
+        }
+        if (fabs(arr[i]) < fabs(arr[min_index])) {
+            min_index = i;
+        }
+    }
+
+    int start = max_index < min_index ? max_index : min_index;
+    int end = max_index > min_index ? max_index : min_index;
+
+    float product = 1;
+    for (int i = start + 1; i < end; i++) {
+        product *= arr[i];
+    }
+
+    return product;
+}
+
+// Сортировка пузырьком
+void bubble_sort(float arr[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) { // Исправлено направление сортировки
+                float temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+    }
+}
+
+int main() {
+    setlocale(LC_ALL, "Russian");
+    int n;
+    printf("Введите размер массива: ");
+    scanf("%d", &n);
+
+    if (n <= 0) {
+        printf("Размер массива должен быть положительным.\n");
+        return 1;
+    }
+
+    float arr[n];
+    printf("Введите элементы массива:\n");
+    for (int i = 0; i < n; i++) {
+        scanf("%f", &arr[i]);
+    }
+
+    float sum_pos = sum_positive(arr, n);
+    printf("Сумма положительных элементов: %.2f\n", sum_pos);
+
+    float product = product_between_max_min(arr, n);
+    printf("Произведение элементов между максимальным и минимальным по модулю: %.2f\n", product);
+
+    bubble_sort(arr, n);
+
+    printf("Упорядоченный массив:\n");
+    for (int i = 0; i < n; i++) {
+        printf("%.2f ", arr[i]);
+    }
+
+    return 0;
+}
+
+//В одномерном массиве состоящем из n вещественных элементов, вычислить:
+//-сумму положительных элементов массива
+//-произведение элементов массива расположенных между максимальным по модулю и минимаьным по модулю элементами
+//упорядочить элементы массива по убыванию применив метод сортировки пузырьком
