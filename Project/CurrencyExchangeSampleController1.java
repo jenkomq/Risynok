@@ -8,25 +8,15 @@ import org.springframework.web.bind.annotation.RestController;
  
 @SpringBootApplication
 @RestController
-// The @RestController annotation in Spring is essentially
-// just a combination of
-// @Controller and @ResponseBody. This annotation was added
-// during Spring 4.0 to remove the redundancy of declaring
-// the @ResponseBody annotation in your controller
 public class CurrencyExchangeSampleController {
     @Autowired private Environment environment;
  
     @GetMapping(
         "/currency-exchange-sample/fromCurrency/{fromCurrency}/toCurrency/{toCurrency}")
-    // where {fromCurrency} and {toCurrency} are path
-    // variable
-    // fromCurrency can be USD,EUR,AUD,INR and toCurrency
-    // can be the opposite of any fromCurrency
     public ExchangeValue
     retrieveExchangeValue(@PathVariable String fromCurrency,
                           @PathVariable String toCurrency)
     {
-        // Here we need to write all of our business logic
         BigDecimal conversionMultiple = null;
         ExchangeValue exchangeValue = new ExchangeValue();
         if (fromCurrency != null && toCurrency != null) {
