@@ -4,16 +4,10 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
  
-// @Entity annotation defines that a class can be mapped to
-// a table
+
 @Entity
- 
-// Representation of the table name
 @Table(name = "Exchange_Value")
 public class ExchangeValue {
-    // The @Id annotation is inherited from
-    // javax.persistence.Id, indicating the member field
-    // below is the primary key of the current entity
     @Id @Column(name = "id") private Long id;
     @Column(name = "currency_from")
     private String fromCurrency;
