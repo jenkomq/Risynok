@@ -1,0 +1,175 @@
+class Product:
+    def __init__(self, name, price):
+        self.name = name
+        self.price = price
+
+class Administrator:
+    def __init__(self, username, password):
+        self.username = username
+        self.password = password
+
+    def add_product(self, product):
+        print(f"Добавлен товар {product.name} по цене {product.price}")
+
+    def remove_product(self, product):
+        print(f"Удален товар {product.name}")
+
+    def view_products(self, products):
+        for product in products:
+            print(f"Товар {product.name} по цене {product.price}")
+
+class Cashier:
+    def __init__(self, username, password):
+        self.username = username
+        self.password = password
+
+    def serve_buyer(self, buyer, products):
+        total_cost = 0
+        for product in products:
+            total_cost += product.price
+        print(f"Покупатель {buyer.username} обслужен успешно. Сумма покупки: {total_cost}")
+
+class Buyer:
+    def __init__(self, username, password, balance=0):
+        self.username = username
+        self.password = password
+        self.bought_products = []
+        self.balance = balance
+
+    def view_products(self, products):
+        for product in products:
+            print(f"Товар {product.name} по цене {product.price}")
+
+    def buy_product(self, product, quantity):
+        if product.price * quantity <= self.balance:
+            self.bought_products.append((product, quantity))
+            self.balance -= product.price * quantity
+            print(f"Куплен товар {product.name} в количестве {quantity} по цене {product.price * quantity}")
+        else:
+            print("Недостаточно средств на счете")
+
+    def view_bought_products(self):
+        for product, quantity in self.bought_products:
+            print(f"Товар {product.name} в количестве {quantity} по цене {product.price * quantity}")
+
+    def pay(self, amount):
+        self.balance += amount
+        print(f"Счет пополнен на {amount}. Текущий баланс: {self.balance}")
+
+class Shop:
+    def __init__(self):
+        self.products = [
+            Product("Хлеб", 20),
+            Product("Молоко", 30),
+            Product("Мороженое", 50),
+            Product("Яйца", 15),
+            Product("Сыр", 40),
+            Product("Колбаса", 60),
+            Product("Чай", 10),
+            Product("Кофе", 20),
+            Product("Шоколад", 35),
+            Product("Вода", 5)
+        ]
+        self.administrators = []
+        self.cashiers = []
+        self.buyers = []
+
+    def add_product(self, product):
+        self.products.append(product)
+
+    def remove_product(self, product):
+        self.products.remove(product)
+
+    def login(self, username, password):
+        if username == "danilkolaev" and password == "123":
+            return Administrator(username, password)
+        elif username == "кассир" and password == "123":
+            return Cashier(username, password)
+        elif username == "покупатель" and password == "123":
+            return Buyer(username, password)
+        else:
+            print("Неверный никнейм или пароль")
+            return None
+
+def main():
+    shop = Shop()
+
+    while True:
+        print("Введите никнейм и пароль для входа в систему")
+        username = input("Никнейм: ")
+        password = input("Пароль: ")
+
+        user = shop.login(username, password)
+
+        if user:
+            if isinstance(user, Administrator):
+                while True:
+                    print("Введите команду:")
+                    print("1. Добавить товар")
+                    print("2. Удалить товар")
+                    print("3. Просмотреть товары")
+                    print("4. Выйти")
+                    command = input("Команда: ")
+
+                    if command == "1":
+                        name = input("Введите название товара: ")
+                        price = float(input("Введите цену товара: "))
+                        product = Product(name, price)
+                        user.add_product(product)
+                        shop.add_product(product)
+                    elif command == "2":
+                        name = input("Введите название товара: ")
+                        for product in shop.products:
+                            if product.name == name:
+                                user.remove_product(product)
+                                shop.remove_product(product)
+                                break
+                    elif command == "3":
+                        user.view_products(shop.products)
+                    elif command == "4":
+                        break
+            elif isinstance(user, Cashier):
+                while True:
+                    print("Введите команду:")
+                    print("1. Обслужить покупателя")
+                    print("2. Выйти")
+                    command = input("Команда: ")
+
+                    if command == "1":
+                        buyer_username = input("Введите никнейм покупателя: ")
+                        buyer_password = input("Введите пароль покупателя: ")
+                        buyer = shop.login(buyer_username, buyer_password)
+                        user.serve_buyer(buyer, buyer.bought_products)
+                    elif command == "2":
+                        break
+            elif isinstance(user, Buyer):
+                while True:
+                    print("Введите команду:")
+                    print("1. Просмотреть товары")
+                    print("2. Купить товар")
+                    print("3. Просмотреть купленные товары")
+                    print("4. Пополнить счет")
+                    print("5. Выйти")
+                    command = input("Команда: ")
+
+                    if command == "1":
+                        user.view_products(shop.products)
+                    elif command == "2":
+                        name = input("Введите название товара: ")
+                        for product in shop.products:
+                            if product.name == name:
+                                quantity = int(input("Введите количество товаров: "))
+                                user.buy_product(product, quantity)
+                                break
+                    elif command == "3":
+                        user.view_bought_products()
+                    elif command == "4":
+                        amount = float(input("Введите сумму для пополнения счета: "))
+                        user.pay(amount)
+                    elif command == "5":
+                        break
+                    else:
+                        print("Повторите, что вы сказали")
+
+if __name__ == "__main__":
+    main()
