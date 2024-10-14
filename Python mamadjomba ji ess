@@ -1,0 +1,178 @@
+######################################################################################
+#                                                                                    #
+#                            █████████████                                           #
+#                            █            █                                          #
+#                            █            █                                          #
+#                            █            █                                          #
+#                            █            █                                          #
+#                            █████████████                                           #
+#                                                                                    #
+#                              by Danil                                              #
+######################################################################################
+
+import speech_recognition as sr
+import pyttsx3
+import requests
+import webbrowser
+import subprocess
+import ctypes
+import sys
+
+engine = pyttsx3.init()
+
+
+def hello():
+    engine.say("Привет, я твой голосовой помощник. Можешь дать мне следующие задания:")
+    engine.runAndWait()
+    print("Время, открой браузер, открой доту, погода, открой ютуб, открой вк, открой сферум.")
+
+
+def is_admin():
+    try:
+        return ctypes.windll.shell32.IsUserAnAdmin()
+    except:
+        return False
+def browser():
+    engine.say("Открываю браузер.")
+    engine.runAndWait()
+    webbrowser.open("https://www.google.ru/")
+
+
+def youtube():
+    engine.say("Открываю YouTube.")
+    engine.runAndWait()
+    webbrowser.open("https://www.youtube.com/")
+
+
+def vk():
+    engine.say("Открываю ВКонтакте.")
+    engine.runAndWait()
+    webbrowser.open("https://vk.com/al_feed.php")
+
+
+def sferym():
+    engine.say("Открываю Сферум.")
+    engine.runAndWait()
+    subprocess.Popen("C:\\Program Files\\VK Messenger\\VK Мессенджер.exe")
+
+
+def dota2():
+    engine.say("Открываю Dota 2.")
+    engine.runAndWait()
+    webbrowser.open(r"steam://rungameid/570")
+
+def steam():
+    engine.say("Открываю стим")
+    engine.runAndWait()
+    subprocess.Popen(r"C:\Program Files (x86)\Steam\steam.exe")
+
+def telegram():
+    engine.say("Открываю телеграм")
+    engine.runAndWait()
+    subprocess.Popen(r"C:\Users\danil\AppData\Roaming\Telegram Desktop\Telegram.exe")
+
+# Вот эта шляпа не работает требует запуска с повышенными привелегиями, галочки сняты с запуска от имени администратора, но сами владельцы приложения ответили,
+# что огран не снимается и обязательно будет запускать от имени администратора
+
+def overplus():
+    engine.say("Открываю Overplus")
+    engine.runAndWait()
+    try:
+        if is_admin():
+            print("Запуск Overplus с административными правами.")
+            subprocess.Popen(["cmd", "/k", r"C:\Program Files\Overplus\Overplus.exe"])
+        else:
+            print("Перезапуск с повышенными привилегиями.")
+            ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv), None, 1)
+    except FileNotFoundError:
+        print("Не удалось найти файл Overplus.exe. Проверьте путь.")
+    except Exception as e:
+        print(f"Произошла ошибка при запуске Overplus: {e}")
+
+def pogoda():
+    recognizer = sr.Recognizer()
+    with sr.Microphone() as source:
+        engine.say("Скажите название города для прогноза погоды.")
+        engine.runAndWait()
+        audio = recognizer.listen(source)
+
+    try:
+        city = recognizer.recognize_google(audio, language="ru-RU")
+        engine.say(f"Вы сказали: {city}")
+        engine.runAndWait()
+
+        api_key = "1616e6da3c97919f6651254c7d1f2804"
+        base_url = "http://api.openweathermap.org/data/2.5/weather?"
+        complete_url = base_url + "appid=" + api_key + "&q=" + city + "&units=metric&lang=ru"
+
+        response = requests.get(complete_url)
+        data = response.json()
+
+        if data["cod"] != "404":
+            main = data["main"]
+            weather = data["weather"]
+            temperature = main["temp"]
+            description = weather[0]["description"]
+            weather_report = f"В городе {city} сейчас {temperature} градусов по Цельсию с {description}."
+        else:
+            weather_report = "Извините, я не могу найти погоду для этого города."
+
+        engine.say(weather_report)
+        engine.runAndWait()
+    except sr.UnknownValueError:
+        engine.say("Извините, я не смог распознать ваш голос.")
+        engine.runAndWait()
+    except sr.RequestError:
+        engine.say("Ошибка при обращении к сервису распознавания.")
+        engine.runAndWait()
+
+
+
+def main():
+    hello()
+    while True:
+        recognizer = sr.Recognizer()
+        with sr.Microphone() as source:
+            print("Скажите команду...")
+            try:
+                audio = recognizer.listen(source, timeout=5, phrase_time_limit=10)
+                command = recognizer.recognize_google(audio, language="ru-RU").lower()
+                print(f"Вы сказали: {command}")
+
+                if "браузер" in command:
+                    browser()
+                elif "youtube" in command:
+                    youtube()
+                elif "вк" in command:
+                    vk()
+                elif "сферум" in command:
+                    sferym()
+                elif "дота" in command:
+                    dota2()
+                elif "telegram" in command:
+                    telegram()
+                elif "овер плюс" in command or "овир плюс" in command or "овер plus" in command or "овир plus" in command:
+                    overplus()
+                elif "steam" in command:
+                     steam()
+                elif "погода" in command:
+                    pogoda()
+                elif "стоп" in command or "выход" in command:
+                    engine.say("До свидания!")
+                    engine.runAndWait()
+                    break
+                else:
+                    engine.say("Команда не распознана. Попробуйте еще раз.")
+                    engine.runAndWait()
+
+            except sr.WaitTimeoutError:
+                print("Время ожидания истекло, пожалуйста, начните говорить.")
+            except sr.UnknownValueError:
+                engine.say("Извините, я не смог распознать ваш голос.")
+                engine.runAndWait()
+            except sr.RequestError:
+                engine.say("Ошибка при обращении к сервису распознавания.")
+                engine.runAndWait()
+
+if __name__ == "__main__":
+    main()
